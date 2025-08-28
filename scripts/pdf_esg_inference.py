@@ -1,35 +1,43 @@
+# pdf_esg_inference.py
 import fitz  # PyMuPDF
 from infer_text import infer_text
-import re
 
-KEYWORDS = ["oil spill", "environmental fine", "pollution", "safety recall"]
-
-def extract_chunks(pdf_path, chunk_size=500):
+def extract_text_chunks(pdf_path, chunk_size=500):
+    """Yield text chunks from PDF pages."""
     doc = fitz.open(pdf_path)
-    chunks = []
     for page in doc:
         text = page.get_text()
-        words = text.split()
-        for i in range(0, len(words), chunk_size):
-            chunk = " ".join(words[i:i+chunk_size])
-            chunks.append(chunk)
-    return chunks
+        # Split into chunks
+        for i in range(0, len(text), chunk_size):
+            yield text[i:i+chunk_size]
 
-def keyword_prefilter(chunk):
-    chunk_lower = chunk.lower()
-    return any(k.lower() in chunk_lower for k in KEYWORDS)
-
-def process_pdf(pdf_path):
-    chunks = extract_chunks(pdf_path)
+def analyze_pdf(pdf_path):
     results = []
-    for chunk in chunks:
-        if keyword_prefilter(chunk):
-            res = infer_text(chunk)
-            results.append({"chunk": chunk, "result": res})
+    for chunk in extract_text_chunks(pdf_path):
+        probs = infer_text(chunk)
+        # Assign the category with the highest probability
+        max_cat = max(probs, key=probs.get)
+        results.append({
+            "text": chunk.strip(),
+            "predicted_category": max_cat,
+            "probs": probs
+        })
     return results
 
+def pretty_print(events, top_n=3):
+    for i, e in enumerate(events[:top_n]):
+        print(f"\n--- Event {i+1} ---")
+        print(f"Assigned Category: {e['predicted_category']}")
+        print("Top Probabilities:")
+        # Print top 3 probabilities
+        sorted_probs = sorted(e['probs'].items(), key=lambda x: x[1], reverse=True)[:3]
+        for cat, p in sorted_probs:
+            print(f"  {cat}: {p:.3f}")
+        print("\nExcerpt from report:")
+        print(f"{e['text'][:300]}...")  # first 300 chars for readability
+
+# Example usage
 if __name__ == "__main__":
-    pdf_file = "sample_shell_report.pdf"
-    classified_chunks = process_pdf(pdf_file)
-    for c in classified_chunks:
-        print(c["result"])
+    pdf_file = "data/Shell_ESG_Report_2025.pdf"
+    events = analyze_pdf(pdf_file)
+    pretty_print(events, top_n=5)
