@@ -1,0 +1,38 @@
+[
+  {
+    "keyword": "oil spill",
+    "category": "Environmental",
+    "severity": "high",
+    "alternatives": ["petroleum leak", "crude spill"]
+  },
+  {
+    "keyword": "data breach",
+    "category": "Security",
+    "severity": "medium",
+    "alternatives": ["cyberattack", "security leak", "unauthorised access"]
+  },
+  {
+    "keyword": "strike",
+    "category": "Workforce",
+    "severity": "medium",
+    "alternatives": ["labour strike", "employee protest", "industrial action"]
+  },
+  {
+    "keyword": "air pollution",
+    "category": "Environmental",
+    "severity": "medium",
+    "alternatives": ["smog", "emissions", "particulate matter"]
+  },
+  {
+    "keyword": "bribery",
+    "category": "Governance",
+    "severity": "high",
+    "alternatives": ["corruption", "kickback", "illicit payment"]
+  },
+  {
+    "keyword": "product recall",
+    "category": "Operational",
+    "severity": "medium",
+    "alternatives": ["safety recall", "faulty product", "defective goods"]
+  }
+]
