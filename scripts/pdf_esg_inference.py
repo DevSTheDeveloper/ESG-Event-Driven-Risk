@@ -1,5 +1,4 @@
-# pdf_esg_inference.py
-import fitz  # PyMuPDF
+import fitz  
 from infer_text import infer_text
 
 def extract_text_chunks(pdf_path, chunk_size=500):
@@ -15,7 +14,6 @@ def analyze_pdf(pdf_path):
     results = []
     for chunk in extract_text_chunks(pdf_path):
         probs = infer_text(chunk)
-        # Assign the category with the highest probability
         max_cat = max(probs, key=probs.get)
         results.append({
             "text": chunk.strip(),
@@ -29,14 +27,12 @@ def pretty_print(events, top_n=3):
         print(f"\n--- Event {i+1} ---")
         print(f"Assigned Category: {e['predicted_category']}")
         print("Top Probabilities:")
-        # Print top 3 probabilities
         sorted_probs = sorted(e['probs'].items(), key=lambda x: x[1], reverse=True)[:3]
         for cat, p in sorted_probs:
             print(f"  {cat}: {p:.3f}")
         print("\nExcerpt from report:")
-        print(f"{e['text'][:300]}...")  # first 300 chars for readability
+        print(f"{e['text'][:300]}...")  
 
-# Example usage
 if __name__ == "__main__":
     pdf_file = "data/Shell_ESG_Report_2025.pdf"
     events = analyze_pdf(pdf_file)
