@@ -1,4 +1,3 @@
-# scripts/infer_text.py
 from load_model import get_model
 import torch
 
@@ -13,7 +12,6 @@ def infer_text(text):
     pred = {labels[i]: float(probs[0][i]) for i in range(len(labels))}
     return pred
 
-# Example usage
 if __name__ == "__main__":
     test_text = "Shell experienced an oil spill off the coast of Nigeria, resulting in a significant environmental fine."
     pred = infer_text(test_text)
