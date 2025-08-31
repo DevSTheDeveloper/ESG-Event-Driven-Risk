@@ -1,21 +1,18 @@
-# scripts/load_model.py
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 import torch
 
-# Use MPS if available, otherwise CPU
 device = torch.device("mps") if torch.backends.mps.is_built() else torch.device("cpu")
 print(f"Using device: {device}")
 
 MODEL_NAME = "yiyanghkust/finbert-esg-9-categories"
 
-# Load tokenizer and model
 tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
 model = AutoModelForSequenceClassification.from_pretrained(MODEL_NAME)
 model.to(device)
 model.eval()
 print("FinBERT 9-category ESG model loaded successfully")
 
-# Category labels (should match model's output)
+#Category labels (should match model's output)
 labels = [
     "Climate Change", "Natural Capital", "Pollution & Waste",
     "Human Capital", "Product Liability", "Community Relations",
@@ -25,7 +22,7 @@ labels = [
 def get_model():
     return tokenizer, model, device, labels
 
-# Test function
+# Test function - change as needed
 if __name__ == "__main__":
     test_text = "Shell experienced an oil spill off the coast of Nigeria, resulting in a significant environmental fine."
     tokenizer, model, device, labels = get_model()
